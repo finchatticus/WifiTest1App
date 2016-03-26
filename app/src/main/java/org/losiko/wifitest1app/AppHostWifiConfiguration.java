@@ -1,10 +1,12 @@
 package org.losiko.wifitest1app;
 
+import android.annotation.SuppressLint;
 import android.net.wifi.WifiConfiguration;
 
 /**
  * Created by admin on 26.03.2016.
  */
+@SuppressLint("ParcelCreator")
 public class AppHostWifiConfiguration extends WifiConfiguration {
     public AppHostWifiConfiguration() {
         SSID = "TestAp1";
