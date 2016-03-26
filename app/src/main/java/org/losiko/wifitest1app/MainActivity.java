@@ -17,6 +17,9 @@ import java.lang.reflect.Method;
 
 public class MainActivity extends AppCompatActivity {
 
+    WifiManager wifiManager;
+    WifiConfiguration wifiConfiguration;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,33 +38,32 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        WifiManager wifiManager = (WifiManager)getBaseContext().getSystemService(Context.WIFI_SERVICE);
+        wifiManager =  (WifiManager)getBaseContext().getSystemService(Context.WIFI_SERVICE);
+        wifiConfiguration =  new AppHostWifiConfiguration();
+        
+    }
 
-        if(wifiManager.isWifiEnabled())
-        {
-            wifiManager.setWifiEnabled(true);
-        }
-
-        WifiConfiguration netConfig = new WifiConfiguration();
-
-        netConfig.SSID = "MyAP";
-        netConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
-        netConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
-        netConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
-        netConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
-
+    public void tryToStartHostSpot(View view) {
         try{
-            Method setWifiApMethod = wifiManager.getClass().getMethod("setWifiApEnabled", WifiConfiguration.class, boolean.class);
-            boolean apstatus=(Boolean) setWifiApMethod.invoke(wifiManager, netConfig,true);
+            if(wifiManager.isWifiEnabled())
+            {
+                wifiManager.setWifiEnabled(false);
+            }
+
+            Method methodSetWifiApEnabled = wifiManager.getClass().getMethod("setWifiApEnabled", WifiConfiguration.class, boolean.class);
+
+            boolean tryToSetWifiApEnabled = (Boolean) methodSetWifiApEnabled.invoke(wifiManager, wifiConfiguration, true);
 
             Method isWifiApEnabledmethod = wifiManager.getClass().getMethod("isWifiApEnabled");
-            while(!(Boolean)isWifiApEnabledmethod.invoke(wifiManager)){};
+//            while(!(Boolean)isWifiApEnabledmethod.invoke(wifiManager)){}
+
             Method getWifiApStateMethod = wifiManager.getClass().getMethod("getWifiApState");
             int apstate=(Integer)getWifiApStateMethod.invoke(wifiManager);
-            Method getWifiApConfigurationMethod = wifiManager.getClass().getMethod("getWifiApConfiguration");
-            netConfig=(WifiConfiguration)getWifiApConfigurationMethod.invoke(wifiManager);
-            Log.e("CLIENT", "\nSSID:"+netConfig.SSID+"\nPassword:"+netConfig.preSharedKey+"\n");
 
+            Method getWifiApConfigurationMethod = wifiManager.getClass().getMethod("getWifiApConfiguration");
+            wifiConfiguration =(WifiConfiguration)getWifiApConfigurationMethod.invoke(wifiManager);
+
+            Log.e("CLIENT", "\nSSID:" + wifiConfiguration.SSID + "\nPassword:" + wifiConfiguration.preSharedKey + "\n");
         } catch (Exception e) {
             Log.e(this.getClass().toString(), "", e);
         }
@@ -88,4 +90,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
