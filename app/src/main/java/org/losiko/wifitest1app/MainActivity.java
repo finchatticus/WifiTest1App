@@ -1,7 +1,14 @@
 package org.losiko.wifitest1app;
 
+import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,14 +19,22 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     WifiManager wifiManager;
     WifiConfiguration wifiConfiguration;
     AppWifiManager appWifiManager;
+
+    final String TAG = "app";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,21 +54,21 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        wifiManager =  (WifiManager)getBaseContext().getSystemService(Context.WIFI_SERVICE);
-        wifiConfiguration =  new AppHostWifiConfiguration();
+        wifiManager = (WifiManager) getBaseContext().getSystemService(Context.WIFI_SERVICE);
+        wifiConfiguration = new AppWifiConfiguration();
         appWifiManager = new AppWifiManager(wifiManager, wifiConfiguration);
     }
+
 
     public void tryToStartHostSpot(View view) {
         try{
             appWifiManager.setWifiDisable();
             appWifiManager.setWifiApEnabled();
-
-            Log.e("CLIENT", "\nSSID:" + wifiConfiguration.SSID + "\nPassword:" + wifiConfiguration.preSharedKey + "\n");
         } catch (Exception e) {
             Log.e(this.getClass().toString(), "", e);
         }
     }
+
     public void tryToStopHostSpot(View view) {
         try{
             appWifiManager.setWifiApDisabled();

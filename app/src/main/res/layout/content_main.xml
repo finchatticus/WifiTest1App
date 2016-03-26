@@ -31,4 +31,24 @@
         android:layout_below="@+id/buttonHostOn"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+
+    <Button
+        android:onClick="updateSSID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get aviable ssid&apos;s"
+        android:id="@+id/buttonUpdateSSID"
+        android:layout_below="@+id/buttonHostOff"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="28dp" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text"
+        android:layout_below="@+id/buttonUpdateSSID"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

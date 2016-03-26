@@ -4,7 +4,6 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -55,6 +54,7 @@ public class AppWifiManager {
     }
     public boolean setWifiApEnabled() {
         try {
+            wifiConfiguration.SSID = AppWifiConfiguration.generateSSID();
             return (Boolean) methodSetWifiApEnabled.invoke(wifiManager, wifiConfiguration, true);
         } catch (Exception e) {
             methodCallError(e);
